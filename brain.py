@@ -14,7 +14,7 @@ pos = 0
 #Read input file and put it in a list
 arg = str(sys.argv[1:]).strip("[]'")
 if not os.path.isfile(arg):
-    print('Usage: brain.py foo.b'), exit()
+    print('Usage: brain.py foo.b');exit()
 code = list(open(arg, 'r').read())
 code = [x.strip() for x in code]
 
@@ -30,10 +30,16 @@ def loop(code):
             blocks[temp.pop()] = i
     return blocks
 
+blocks = loop(code)
+
 i = 0
 while i < len(code) :
-    if code[i] == '+': reg[pos]+=1
-    elif code[i] == '-' : reg[pos]-=1
+    if code[i] == '+':
+        reg[pos]+=1
+        if reg[pos] > 255 : reg[pos] = 0
+    elif code[i] == '-' :
+        reg[pos]-=1
+        if reg[pos] < 0 : reg[pos] = 255
     elif code[i] == '>' :
         pos += 1
         if pos > len(reg): print('Out of memory !');pos = 0
@@ -41,9 +47,9 @@ while i < len(code) :
         pos -= 1
         if pos < 0: print('Out of memory !');pos = 0
     elif code[i] == '[':
-        if reg[pos] == 0 : i = loop(code)[i]
+        if reg[pos] == 0 : i = blocks[i]
     elif code[i] == ']' :
-        if reg[pos] != 0 : i = loop(code)[i]
+        if reg[pos] != 0 : i = blocks[i]
     elif code[i] == '.' :
         print(chr(reg[pos]), end='')
     elif code[i] == ',' :
